@@ -18,3 +18,7 @@ Após fazer o Try/Catch para lidar com erros de arquivos não encontrados e acab
 *Quarto Commit:*
 
 Etapa 2 iniciada com a análise dos arquivos, inicialmente utilizando a biblioteca pandas para me auxiliar na leitura dos arquivos, tive uma dificuldade inicial pois eles estavam com uma codificaçao mais antiga, mas após identifica-la, consegui ler todos os arquivos e gerar um novo arquivo com as despesas consolidadas.
+
+*Quinto e Sexto Commit:*
+
+Busquei fazer uma limpeza no arquivo enorme gerado e para isso primeiro criei um arquivo somente para espiar as primeiras 5 linhas de todas as colunas para saber como estavam os dados e com isso criei o arquivo limpeza.py, inicialmente estava travando pela quantidade de memória absurda necessária para ler o arquivo, então aceitei que não conseguiria conseguir CNPJ agora. Filtrei só as despesas usando o REG_ANS e no próximo commit cruzar com a tabela de cadastro para pegar o CNPJ e o Nome.

@@ -56,10 +56,10 @@ def limpar_dados():
         
         # Salvando
         df_final.to_csv(output_file, index=False, sep=';', encoding='utf-8')
-        print(f"🏁 LIMPEZA CONCLUÍDA: {output_file}")
-        print(f"   Linhas originais: +6 Milhões")
-        print(f"   Linhas finais (Despesas): {len(df_final)}")
-        print("   Nota: Mantivemos REG_ANS. O CNPJ virá no próximo passo (Join).")
+        print(f" LIMPEZA CONCLUÍDA: {output_file}")
+        print(f"  Linhas originais: +6 Milhões")
+        print(f"  Linhas finais (Despesas): {len(df_final)}")
+        print("  Nota: Mantivemos REG_ANS. O CNPJ virá no próximo passo (Join).")
     else:
         print(" Nenhuma linha de despesa encontrada. Verifique o filtro.")
 

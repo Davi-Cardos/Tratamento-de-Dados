@@ -22,3 +22,7 @@ Etapa 2 iniciada com a análise dos arquivos, inicialmente utilizando a bibliote
 *Quinto e Sexto Commit:*
 
 Busquei fazer uma limpeza no arquivo enorme gerado e para isso primeiro criei um arquivo somente para espiar as primeiras 5 linhas de todas as colunas para saber como estavam os dados e com isso criei o arquivo limpeza.py, inicialmente estava travando pela quantidade de memória absurda necessária para ler o arquivo, então aceitei que não conseguiria conseguir CNPJ agora. Filtrei só as despesas usando o REG_ANS e no próximo commit cruzar com a tabela de cadastro para pegar o CNPJ e o Nome.
+
+*Sétimo Commit:*
+
+Primeiro vi os nomes das colunas todas dos cadatros com um código simples de print "espiar_cadastro.py", e então tendo essa informação fiz o arquivo "validando.py" onde fiz o cruzamento das informações como o CNPJ com os registros ANS, gerando um arquivo final de "resultado_final_teste.csv" com os resultados das validações e o número de linhas de operadoras sem cadastro que foi de 8.477 linhas, são operadoras que mandaram balanços contábeis em 2023/2024, mas não constam mais na lista de Ativas hoje.

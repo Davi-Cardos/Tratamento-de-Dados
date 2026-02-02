@@ -1,15 +1,16 @@
-print(">>> O PYTHON ESTÁ LENDO O ARQUIVO! <<<")
 import os
 from src.coletar import baixar
+from src.transformar import processar
 
-def main():
-    print(">>> Entrou na função main <<<")
-    print(">>> Início do Teste Intuitive Care <<<")
+root = os.getcwd()
+raw_path = os.path.join(root, 'dados_brutos')
 
-    pasta_caminho = os.path.join(os.getcwd(), "dados_brutos")
+print("--- Rodando ETL ---")
 
-    print("--- Etapa de Coleta de Dados ---")
-    baixar(pasta_caminho)
+# Etapa 1
+baixar(raw_path)
 
-    print("\n>>> Processo de download finalizado. Verifique a pasta 'dados_brutos'. ")
-main()
+# Etapa 2
+processar(raw_path)
+
+print("--- Fim ---")

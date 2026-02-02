@@ -9,8 +9,12 @@ Etapa de Coletar Dados sendo feita. Me deparei com o desafio inicial de buscar o
     * *Prós:* **Alta Resiliência**. O script funciona independentemente do nome do arquivo, desde que ele seja um `.zip` dentro da pasta correta.
     * *Contras:* Adiciona uma dependência ao projeto (`beautifulsoup4`) e requer uma requisição HTTP extra para ler o diretório.
 
-Também coloquei a extração em um arquivo denominado "coletar.py" separado na pasta "src" e fiz sua chamada de função no arquivo main, para ficar melhor organizado.
+Também coloquei a extração em um arquivo denominado "coletar.py" separado na pasta "src" e fiz sua chamada de função "baixar" no arquivo main, para ficar melhor organizado.
 
 *Terceiro Commit:*
 
 Após fazer o Try/Catch para lidar com erros de arquivos não encontrados e acabar não encontrando nenhum, verifiquei que estava com o pensamento errado de "períodos", utilizando tuplas a cada trimestre de um ano, porém o ANS não estava separando assim mas sim em anos, mudando as tuplas em períodos para anos "2024, 2023", consegui entrar nas pastas do arquivo do site com a função de "baixar" do arquivo "coletar.py" e baixar os arquivos zip da ANS.
+
+*Quarto Commit:*
+
+Etapa 2 iniciada com a análise dos arquivos, inicialmente utilizando a biblioteca pandas para me auxiliar na leitura dos arquivos, tive uma dificuldade inicial pois eles estavam com uma codificaçao mais antiga, mas após identifica-la, consegui ler todos os arquivos e gerar um novo arquivo com as despesas consolidadas.

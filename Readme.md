@@ -26,3 +26,7 @@ Busquei fazer uma limpeza no arquivo enorme gerado e para isso primeiro criei um
 *Sétimo Commit:*
 
 Primeiro vi os nomes das colunas todas dos cadatros com um código simples de print "espiar_cadastro.py", e então tendo essa informação fiz o arquivo "validando.py" onde fiz o cruzamento das informações como o CNPJ com os registros ANS, gerando um arquivo final de "resultado_final_teste.csv" com os resultados das validações e o número de linhas de operadoras sem cadastro que foi de 8.477 linhas, são operadoras que mandaram balanços contábeis em 2023/2024, mas não constam mais na lista de Ativas hoje.
+
+*Oitavo Commit:* 
+
+Etapa do teste de agregação estatística, aqui principalmente busquei a maior despesa, mas implementei desvio padrão, soma das despesas, média trimestral, contagem e ordenação das mesmas no final para obter a maior despesa do arquivo de resultado final após a validação.

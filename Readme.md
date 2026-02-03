@@ -9,7 +9,9 @@ Etapa de Coletar Dados sendo feita. Me deparei com o desafio inicial de buscar o
     * *Prós:* **Alta Resiliência**. O script funciona independentemente do nome do arquivo, desde que ele seja um `.zip` dentro da pasta correta.
     * *Contras:* Adiciona uma dependência ao projeto (`beautifulsoup4`) e requer uma requisição HTTP extra para ler o diretório.
 
-Também coloquei a extração em um arquivo denominado "coletar.py" separado na pasta "src" e fiz sua chamada de função "baixar" no arquivo main, para ficar melhor organizado.
+Também coloquei a extração em um arquivo denominado "coletar.py" separado na pasta "src" e fiz sua chamada de função "baixar" no arquivo main, para ficar melhor organizado. 
+
+Obs: Todos os outros novos arquivos das etapas 1 e 2 ficarão nessa pasta "src" com uma chamada de sua função pela main, somente para ficar melhor organizado.
 
 *Terceiro Commit:*
 
@@ -21,12 +23,24 @@ Etapa 2 iniciada com a análise dos arquivos, inicialmente utilizando a bibliote
 
 *Quinto e Sexto Commit:*
 
-Busquei fazer uma limpeza no arquivo enorme gerado e para isso primeiro criei um arquivo somente para espiar as primeiras 5 linhas de todas as colunas para saber como estavam os dados e com isso criei o arquivo limpeza.py, inicialmente estava travando pela quantidade de memória absurda necessária para ler o arquivo, então aceitei que não conseguiria conseguir CNPJ agora. Filtrei só as despesas usando o REG_ANS e no próximo commit cruzar com a tabela de cadastro para pegar o CNPJ e o Nome.
+Busquei fazer uma limpeza no arquivo enorme gerado e para isso primeiro criei um arquivo somente para espiar as primeiras 5 linhas de todas as colunas para saber como estavam os dados e com isso criei o arquivo limpeza.py, inicialmente estava travando pela quantidade de memória absurda necessária para ler o arquivo, então aceitei que não conseguiria conseguir o CNPJ agora. Filtrei só as despesas usando o REG_ANS e no próximo commit cruzar com a tabela de cadastro para pegar o CNPJ e o Nome.
 
 *Sétimo Commit:*
 
-Primeiro vi os nomes das colunas todas dos cadatros com um código simples de print "espiar_cadastro.py", e então tendo essa informação fiz o arquivo "validando.py" onde fiz o cruzamento das informações como o CNPJ com os registros ANS, gerando um arquivo final de "resultado_final_teste.csv" com os resultados das validações e o número de linhas de operadoras sem cadastro que foi de 8.477 linhas, são operadoras que mandaram balanços contábeis em 2023/2024, mas não constam mais na lista de Ativas hoje.
+Primeiro vi os nomes das colunas todas dos cadatros com um código simples de print "espiar_cadastro.py", e então tendo essa informação fiz o arquivo "validando.py" onde fiz o cruzamento das informações como o CNPJ com os registros ANS, gerando um arquivo final de "resultado_final_teste.csv" com os resultados das validações e o número de linhas de operadoras sem cadastro, que foi de 8.477 linhas, são operadoras que mandaram balanços contábeis em 2023/2024, mas que não constam mais na lista de Ativas hoje.
 
 *Oitavo Commit:* 
 
-Etapa do teste de agregação estatística, aqui principalmente busquei a maior despesa, mas implementei desvio padrão, soma das despesas, média trimestral, contagem e ordenação das mesmas no final para obter a maior despesa do arquivo de resultado final após a validação.
+Etapa do teste de agregação estatística, aqui principalmente busquei a maior despesa após a validação, mas implementei também o desvio padrão, soma das despesas, média trimestral, contagem e ordenação das mesmas no final para obter a maior despesa do arquivo de resultado final.
+
+*Nono e Décimo Commits:*
+
+Apenas Removendo do histórico do Git os arquivos CSV e criando um gitignore para eles, pois alguns são muito grandes para eu poder lançar os commits no meu Github.
+
+*Décimo primeiro commit:*
+
+Criação de tabelas em SQL com o objetivo de estruturar os dados processados em um banco de dados relacional, a estrutura foi desenhada separando métricas quantitativas e atributos descritivos seguindo a lógica "Star Schema", facilitando a escrita de queries analíticas. Optei pelo uso de tipos `DECIMAL` para colunas monetárias ao invés de `FLOAT` ou `DOUBLE`. Isso elimina alguns erros de arredondamento em operações de ponto flutuante. 
+
+Além da estruturação, desenvolvi queries SQL, incluindo:
+1.  **Média dos Trimestres:** Cálculo agregado para identificar tendências macro.
+2.  **Crescimento vs. Mercado:** Comparativo de performance para identificar empresas acima da média do setor.

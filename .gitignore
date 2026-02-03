@@ -1,5 +1,5 @@
 src/*.csv
 __pycache__/
-*.pyc
 src/__pycache__/transformar.cpython-313.pyc
+*.csv
 

@@ -44,3 +44,7 @@ Criação de tabelas em SQL com o objetivo de estruturar os dados processados em
 Além da estruturação, desenvolvi queries SQL, incluindo:
 1.  **Média dos Trimestres:** Cálculo agregado para identificar tendências macro.
 2.  **Crescimento vs. Mercado:** Comparativo de performance para identificar empresas acima da média do setor.
+
+*Décimo segundo commit:*
+
+Backend iniciado, escrevendo a api para consumir os dados do CSV consolidado, coloquei alguns trade-offs escrito no código conforme ia fazendo, até o momento me deparei com um erro ao ler o arquivo mas o esqueleto da api está feito, próximo commit buscarei conseguir ler o arquivo.

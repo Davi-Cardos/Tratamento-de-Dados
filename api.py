@@ -20,7 +20,8 @@ df_despesas = pd.DataFrame()
 # sem precisar de um banco de dados complexo rodando localmente.
 try:
     print("Carregando dados do CSV...")
-    df_despesas = pd.read_csv("despesas_agregadas.csv")
+    # Troque a linha do pd.read_csv por esta:
+    df_despesas = pd.read_csv("despesas_agregadas.csv", sep=';', encoding='latin1')
     
     # Tratamento de dados: O Pandas as vezes lê CNPJ como número, então converti para string e removi o '.0' que aparece.
     if 'CNPJ' in df_despesas.columns:

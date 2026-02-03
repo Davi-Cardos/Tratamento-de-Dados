@@ -48,3 +48,7 @@ Além da estruturação, desenvolvi queries SQL, incluindo:
 *Décimo segundo commit:*
 
 Backend iniciado, escrevendo a api para consumir os dados do CSV consolidado, coloquei alguns trade-offs escrito no código conforme ia fazendo, até o momento me deparei com um erro ao ler o arquivo mas o esqueleto da api está feito, próximo commit buscarei conseguir ler o arquivo.
+
+*Décimo terceiro commit:*
+
+Erro de ler o CSVs consertado, estava esquecendo de indicar os "sep" e o encoding mais antigo do CSV

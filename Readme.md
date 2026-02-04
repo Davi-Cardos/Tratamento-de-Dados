@@ -56,3 +56,7 @@ Erro de ler o CSVs consertado, estava esquecendo de indicar os "sep" e o encodin
 *Décimo quarto commit:*
 
 Frontend HTML com Vue.js finalizado, algumas alterações no backend "api" pois estava com dificuldade de ler algumas partes do CSV, troquei o "sep" para ponto e vírgula e o encoding deixei igual ao html UTF-8, assim consegui ler todas as informações e gerar os dados na tela do Vue.js, com um gráfico de donut para as 5 maiores despesas encontradas e um CSS básico para ficar visualmente bonito.
+
+*Décimo quinto commit:*
+
+Busquei fazer aqui uma atualização na paginação, percebi que como tinha 90 páginas, se alguém quisesse ir para a última ia precisar clicar 90 vezes, e por isso coloquei 2 botões a mais na paginação, um que leva para o final e outro que leva para o início da paginação.

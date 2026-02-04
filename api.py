@@ -1,11 +1,11 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 import math
 
-app = FastAPI()
-# Configuração do CORS para o Vue.js conseguir acessar
-# Justificativa: Permite que o frontend rode em porta diferente do backend (localhost:8000 vs localhost:3000)
+app = FastAPI(title="API Intuitive Care")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,110 +13,92 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Variável global para manter os dados em memória
-df_despesas = pd.DataFrame()
 
-# Escolha técnica: Carregar o CSV na memória ao iniciar a API.
-# sem precisar de um banco de dados complexo rodando localmente.
+# --- CARREGAMENTO DOS DADOS ---
 try:
-    print("Carregando dados do CSV...")
-    # Troque a linha do pd.read_csv por esta:
-    df_despesas = pd.read_csv("despesas_agregadas.csv", sep=';', encoding='latin1')
+    print("Tentando carregar CSV...")
+    # Tentando ler com UTF-8 e ponto e vírgula
+    df = pd.read_csv("despesas_agregadas.csv", sep=';', encoding='utf-8')
     
-    # Tratamento de dados: O Pandas as vezes lê CNPJ como número, então converti para string e removi o '.0' que aparece.
-    if 'CNPJ' in df_despesas.columns:
-        df_despesas['CNPJ'] = df_despesas['CNPJ'].astype(str).str.replace('.0', '', regex=False)
-    print(f"Dados carregados com sucesso! Total de registros: {len(df_despesas)}")
-
+    # Limpeza no CNPJ
+    if 'CNPJ' in df.columns:
+        df['CNPJ'] = df['CNPJ'].astype(str).str.replace(r'\.0$', '', regex=True)
+    
+    print(f"Sucesso! {len(df)} registros carregados.")
 except Exception as e:
-    print(f"Erro ao ler o arquivo CSV: {e}")
-    # Cria um dataframe vazio para a API não cair
-    df_despesas = pd.DataFrame()
+    print(f"Erro ao ler CSV: {e}")
+    df = pd.DataFrame()
 
-@app.get("/")
-def home():
-    return {"message": "API de Despesas da ANS Online"}
+# --- ROTAS ---
 
 @app.get("/api/operadoras")
-def listar_operadoras(page: int = 1, limit: int = 10, search: str = ""):
-    """
-    Retorna lista de operadoras paginada.
-    Trade-off: Utilizei paginação baseada em offset (page/limit) pois é mais simples de implementar
-    e funciona bem para dados que não mudam em tempo real (estáticos no CSV).
-    """
-    if df_despesas.empty:
+def listar_operadoras(
+    page: int = Query(1, gt=0), 
+    limit: int = Query(10, gt=0), 
+    search: Optional[str] = None
+):
+    if df.empty:
         return {"data": [], "meta": {"total": 0}}
 
-    # Filtragem
-    df_filtrado = df_despesas.copy()
-    if search:
-        termo = search.lower()
-        # Busca tanto no nome quanto na UF
-        df_filtrado = df_filtrado[
-            df_filtrado['RazaoSocial'].astype(str).str.lower().str.contains(termo) | 
-            df_filtrado['UF'].astype(str).str.lower().str.contains(termo)
-        ]
+    data_filtered = df.copy()
 
-    # Paginação manual
-    total_registros = len(df_filtrado)
-    total_paginas = math.ceil(total_registros / limit)
+    # Buscando
+    if search:
+        search_term = search.lower()
+        # Procura em Razao_Social e UF
+        mask = (
+            data_filtered['Razao_Social'].fillna('').astype(str).str.lower().str.contains(search_term) |
+            data_filtered['UF'].fillna('').astype(str).str.lower().str.contains(search_term)
+        )
+        data_filtered = data_filtered[mask]
+
+    # Paginação
+    total_items = len(data_filtered)
+    start = (page - 1) * limit
+    end = start + limit
     
-    inicio = (page - 1) * limit
-    fim = inicio + limit
-    
-    # Slice do dataframe para pegar apenas a página atual
-    resultado = df_filtrado.iloc[inicio:fim].to_dict(orient="records")
+    # JSON: substitui NaN por None e infinitos
+    paginated_data = data_filtered.iloc[start:end].where(pd.notnull(data_filtered), None).to_dict(orient="records")
+
     return {
-        "data": resultado,
+        "data": paginated_data,
         "meta": {
             "page": page,
             "limit": limit,
-            "total": total_registros,
-            "total_pages": total_paginas
+            "total_items": total_items,
+            "total_pages": math.ceil(total_items / limit)
         }
     }
-
-@app.get("/api/operadoras/{cnpj}")
-def buscar_operadora(cnpj: str):
-    """
-    Busca detalhes de uma operadora específica pelo CNPJ.
-    """
-    if df_despesas.empty:
-        raise HTTPException(status_code=500, detail="Base de dados não carregada")
-
-    # Filtra pelo CNPJ exato
-    operadora = df_despesas[df_despesas['CNPJ'] == cnpj]
-
-    if operadora.empty:
-        raise HTTPException(status_code=404, detail="Operadora não encontrada")
-
-    # Retorna o primeiro registro que encontrar
-    return operadora.iloc[0].to_dict()
-
 @app.get("/api/estatisticas")
-def estatisticas():
+def obter_estatisticas():
     """
-    Retorna dados agregados para o dashboard.
-    Trade-off: Calculando em tempo real.
-    Justificativa: Como a leitura é em memória com a biblioteca Pandas, a operação é rápida o suficiente para o volume atual.
+    Retorna métricas consolidadas.
     """
-    if df_despesas.empty:
-        return {"erro": "Sem dados disponíveis"}
+    if df.empty:
+        return {"total_despesas": 0, "media_por_operadora": 0, "top_5": []}
     
-    coluna_valor = 'Valor_Total_Despesas' 
-    # Só prevenção caso o nome da coluna seja diferente
-    if coluna_valor not in df_despesas.columns:
-        # Tentando pegar a última coluna numérica se não achar pelo nome
-        coluna_valor = df_despesas.select_dtypes(include=['float', 'int']).columns[-1]
-
-    total_geral = df_despesas[coluna_valor].sum()
-    media_geral = df_despesas[coluna_valor].mean()
+    col_valor = 'Total_Despesas' 
+    if col_valor not in df.columns:
+        # Tentando achar outra coluna numérica se o nome mudar
+        cols_num = df.select_dtypes(include=['float', 'int']).columns
+        if len(cols_num) > 0:
+            col_valor = cols_num[-1]
+        else:
+            return {"erro": "Coluna de valor não encontrada"}
     
-    # Pega as top 5
-    top_5 = df_despesas.nlargest(5, coluna_valor)[['RazaoSocial', 'UF', coluna_valor]].to_dict(orient="records")
-
+    # Cálculos seguros 
+    total_geral = df[col_valor].fillna(0).sum()
+    media_geral = df[col_valor].fillna(0).mean()
+    
+    # Top 5
+    top_5 = df.nlargest(5, col_valor)[['Razao_Social', col_valor]].fillna(0).to_dict(orient="records")
+    
     return {
-        "total_despesas": total_geral,
-        "media_por_operadora": media_geral,
-        "top_5": top_5
+        "total_despesas": float(total_geral),
+        "media_por_operadora": float(media_geral),
+        "top_5_operadoras": top_5 
     }
+
+@app.get("/")
+def health_check():
+    return {"status": "online"}

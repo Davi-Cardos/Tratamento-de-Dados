@@ -52,3 +52,7 @@ Backend iniciado, escrevendo a api para consumir os dados do CSV consolidado, co
 *Décimo terceiro commit:*
 
 Erro de ler o CSVs consertado, estava esquecendo de indicar os "sep" e o encoding mais antigo do CSV
+
+*Décimo quarto commit:*
+
+Frontend HTML com Vue.js finalizado, algumas alterações no backend "api" pois estava com dificuldade de ler algumas partes do CSV, troquei o "sep" para ponto e vírgula e o encoding deixei igual ao html UTF-8, assim consegui ler todas as informações e gerar os dados na tela do Vue.js, com um gráfico de donut para as 5 maiores despesas encontradas e um CSS básico para ficar visualmente bonito.

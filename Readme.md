@@ -1,3 +1,43 @@
+# Teste Técnico de Tratamento de Dados
+
+Autor: Davi Cardoso de Oliveira
+
+Este projeto é uma solução Full Stack para o desafio técnico da Intuitive Care, abrangendo desde a coleta e transformação de dados da ANS até a exposição em uma API e visualização em Dashboard interativo.
+
+## Como Executar o Projeto
+
+### Pré-requisitos
+* Python 3.8+
+* Navegador Web (Chrome/Edge/Firefox)
+
+### Instalação das Dependências
+No terminal, na raiz do projeto, execute:
+```bash
+pip install pandas sqlalchemy fastapi uvicorn pymysql
+```
+### Coletando e Transformando os arquivos ANS
+No terminal execute:
+```bash
+py main.py
+```
+### 1. Executando a API (Backend)
+Usei o FastAPI porque é rápido e já cria a documentação sozinho. No terminal, rode:
+```bash
+uvicorn api:app --reload
+```
+Aguarde a mensagem: *Application startup complete.*
+
+### 2. Acessando o Dashboard (Frontend)
+Não é necessário instalação de Node.js ou build complexo.
+
+1º passo: Vá até a pasta do projeto.
+
+2º passo: Dê um duplo clique no arquivo index.html.
+
+3° passo: O painel abrirá no seu navegador, conectando-se automaticamente à API local.
+
+## Relatórios dos Commits feitos conforme ia desenvolvendo o projeto
+
 *Primeiro Commit:* 
 
 Iniciei o repositório no Github
@@ -60,3 +100,59 @@ Frontend HTML com Vue.js finalizado, algumas alterações no backend "api" pois 
 *Décimo quinto commit:*
 
 Busquei fazer aqui uma atualização na paginação, percebi que como tinha 90 páginas, se alguém quisesse ir para a última ia precisar clicar 90 vezes, e por isso coloquei 2 botões a mais na paginação, um que leva para o final e outro que leva para o início da paginação.
+
+*Décimo sexto commit:*
+
+Escrita do Readme finalizada incluindo os trade-offs e as instruções de como rodar o projeto.
+
+## Detalhes das Etapas e Trade-offs Técnicos
+
+### Etapa 1 e 2: Engenharia de Dados (ETL)
+Estratégia de Processamento: Optei pelo uso da biblioteca Pandas processando os arquivos em memória.
+
+Justificativa: Dado o volume de dados dos últimos 3 trimestres, o Pandas oferece a melhor relação entre velocidade de desenvolvimento e uma boa execução, sem precisar configurar um Spark ou ferramenta de Big Data para este escopo.
+
+Tratamento de Inconsistências: Implementei normalização de encoding e limpeza de caracteres em campos numéricos/CNPJ para garantir a integridade das chaves de junção.
+
+### Etapa 3: Banco de Dados e SQL
+Modelagem: Os dados foram estruturados separando métricas financeiras e dados cadastrais, facilitando consultas analíticas.
+
+Tipagem Monetária: Utilizei estritamente DECIMAL(15,2) ao invés de FLOAT.
+
+Justificativa: Em sistemas financeiros, a precisão é muito importante. O tipo float pode introduzir erros de arredondamento em somatórios de grandes volumes.
+
+### Etapa 4: API e Interface Web (Full Stack)
+*4.1. Backend (FastAPI)*
+
+Escolha do Framework: Optei por FastAPI ao invés de Flask.
+
+Justificativa: O FastAPI é assíncrono nativamente, possui validação de dados automática e gera a documentação Swagger UI sem esforço extra, o que acelera o desenvolvimento e facilita a avaliação da API.
+
+Paginação: Offset-based
+
+Justificativa: Para interfaces de tabelas onde o usuário navega página a página, o método limit/offset é o mais intuitivo e simples de implementar. Cursor-based seria excessivo para dados que não são atualizados em tempo real.
+
+Estatísticas: On-the-fly
+
+Justificativa: Como os dados são carregados em memória na inicialização da API, os cálculos de agregação levam milissegundos. Implementar cache adicionaria complexidade de infraestrutura desnecessária para o volume atual.
+
+*4.2. Frontend (Vue.js via CDN)*
+
+Arquitetura "No-Build": O Frontend foi construído em um único arquivo HTML importando Vue 3 e Tailwind CSS via CDN.
+
+Justificativa: Elimina a necessidade de configurar um ambiente Node.js complexo para avaliar o teste.
+
+Busca: Server-Side
+
+Justificativa: A filtragem é realizada no Backend. Se filtrássemos apenas no Frontend, a busca estaria limitada aos 10 itens da página atual em vez de todo o dataset.
+
+## Arquivos do Projeto
+**api.py**: O servidor Python.
+
+**index.html**: O site.
+
+**despesas_agregadas.csv**: O arquivo de dados que a API lê.
+
+**main.py**: O código que tratou os dados.  Obs: Na pasta "src" estão os scripts das funções executadas no código "main.py"
+
+**queries.sql** e **tabelas.sql**: A parte de banco de dados.
